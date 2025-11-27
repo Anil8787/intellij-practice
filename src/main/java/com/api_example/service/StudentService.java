@@ -61,7 +61,7 @@ public class StudentService {
         );
         return student;
     }
-
+    //here you perform update by id.
     public StudentDto updateStudentById(StudentDto studentDto, Long id) {
         Student student = studentRepository.findById(id).orElseThrow(
                 ()-> new ResourceNotFound("no record exist with  id:" +id)
