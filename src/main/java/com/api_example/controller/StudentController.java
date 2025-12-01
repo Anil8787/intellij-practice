@@ -39,10 +39,14 @@ public class StudentController {
 
     }
 
-    //http://localhost:8085/api/v1/student/read
+    //http://localhost:8085/api/v1/student/read?pageNo=0&pageSize=6
     @GetMapping("/read")
-    public ResponseEntity<APIResponse<List<Student>>> readStudent(){
-       List<Student> students= studentService.readStudents();
+    public ResponseEntity<APIResponse<List<Student>>> readStudent(
+            @RequestParam(name="pageNo",required = false,defaultValue = "0") int pageNo ,
+            @RequestParam(name="pageSize",required = false ,defaultValue = "3") int pageSize,
+            @RequestParam(name="description",required = false ,defaultValue = "asc") String description
+    ){
+       List<Student> students= studentService.readStudents(pageNo,pageSize,description);
        APIResponse<List<Student>> student = new APIResponse<>();
        student.setData(students);
        student.setMessage("all data ");

@@ -1,8 +1,11 @@
 package com.api_example.controller;
 
+import com.api_example.dto.APIResponse;
 import com.api_example.dto.EmployeeDto;
 import com.api_example.entity.Employee;
 import com.api_example.service.EmployeeService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,9 +25,20 @@ public class EmployeeController {
         return "saved";
     }
     @GetMapping("/read")      //Because you are using @RestController, Spring will automatically convert the List into JSON.
-    public  List<Employee> readEmployee(){
-        return employeeService.readEmployees();
+    public ResponseEntity<APIResponse<List<Employee>>> readEmployee(
+            @RequestParam(name="pageSize",required = false,defaultValue = "2") int pageSize,
+            @RequestParam(name="pageNo",required = false,defaultValue = "0") int pageNo,
+            @RequestParam(name="description",required = false,defaultValue = "asc") String description
+    ){
+
+        List<Employee> employees = employeeService.readEmployees(pageNo, pageSize, description);
+        APIResponse<List<Employee>> response = new APIResponse<>();
+        response.setMessage("found ...");
+        response.setData(employees);
+        response.setStatus(200);
+        return  new ResponseEntity<>(response, HttpStatus.OK);
     }
+
     @GetMapping("/read/{id}")
     public Employee getEmployeeById(@PathVariable Long id){
         return employeeService.getEmployeeById(id);

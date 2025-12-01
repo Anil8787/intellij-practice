@@ -7,6 +7,10 @@ import com.api_example.exception.ResourceNotFound;
 import com.api_example.repository.StudentAddressRepository;
 import com.api_example.repository.StudentRepository;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -42,9 +46,11 @@ public class StudentService {
     }
 
 
-    public List<Student> readStudents() {
-        List<Student> all = studentRepository.findAll();
-        return all;
+    public List<Student> readStudents(int pageNo, int pageSize, String description) {
+        Pageable pageable= PageRequest.of(pageNo, pageSize, Sort.by(description));
+        Page<Student> all = studentRepository.findAll(pageable);
+        List<Student> students = all.getContent();
+        return students;
 
     }
 
